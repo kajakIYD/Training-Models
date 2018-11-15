@@ -74,8 +74,6 @@ for N in N_vector:
     theta_dict['NEq_' + str(N)] = swap(list(np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(Y)))
     times_dict['NEq_' + str(N)] = time.time() - start_time
     
-    # The Normal Equation - optimal solution in the meaning of MSE
-    
     lin_reg = LinearRegression()
     lin_reg.fit(X, Y)
     scikit_linear_regression_dict[str(N)] = [lin_reg.coef_, lin_reg.intercept_]
