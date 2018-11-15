@@ -26,7 +26,7 @@ def plot_true_vs_predicted_values(X, Y_true, Y_pred, Y_noised, title):
     plt.figure()
     plt.plot(X, Y_true)
     plt.plot(X, Y_pred)
-    plt.scatter(X, Y_noised)
+    plt.scatter(X, Y_noised, c='m')
     plt.title(title)
     plt.show()
 
@@ -79,14 +79,31 @@ for N in N_vector:
     scikit_linear_regression_dict[str(N)] = [lin_reg.coef_, lin_reg.intercept_]
     
     Y_pred = generate_Y_pred_lin(theta_dict['NEq_' + str(N)], X)
-    plot_true_vs_predicted_values(X, Y_true, Y_pred, Y, "Linear regression")
+    plot_true_vs_predicted_values(X, Y_true, Y_pred, Y, "NEq Linear regression")
     
     mean_squared_error_dict['NEq_' + str(N)] = mean_squared_error(Y_true, Y)
     
-print(theta_dict)
-print(times_dict)
-print(scikit_linear_regression_dict)
-print(mean_squared_error_dict)
+    # Gradient Descent
+    # Batch Gradient Descent
+    
+    eta_vector = [0.001, 0.01, 0.1, 1] # It's called learning rate - how fast You "slide down from the slope"
+    iterations = 1000
+    
+    for eta in eta_vector:
+        theta = np.random.randn(2, 1) # initialize random coeeficients of the model
+        for iteration in range(iterations):
+            gradients = 2/N * X_b.T.dot(X_b.dot(theta) - Y)
+            theta = theta - eta * gradients
+        theta_dict['BGD_' + str(N) + '_' + str(eta)] = theta
+        print(theta_dict['BGD_' + str(N) + '_' + str(eta)])
+        Y_pred = generate_Y_pred_lin(theta_dict['BGD_' + str(N) + '_' + str(eta)], X)
+        plot_true_vs_predicted_values(X, Y_true, Y_pred, Y, "BGD Linear regression eta=" + str(eta) + " iters=" + str(iterations))
+        
+    
+#print(theta_dict)
+#print(times_dict)
+#print(scikit_linear_regression_dict)
+#print(mean_squared_error_dict)
 
 dictionaries = [times_dict, mean_squared_error_dict]
 titles = ['times', 'mean_squared_error_dict']
